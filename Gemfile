@@ -3,3 +3,4 @@ source "https://rubygems.org"
 
 gem 'ruby-nmap', '~> 0.8.0'
 gem 'ipaddress', '~> 0.8.3'
+gem 'pi_piper', '~> 2.0'

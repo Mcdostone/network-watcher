@@ -1,9 +1,14 @@
 require './counter'
+require 'pi_piper'
+include PiPiper
 
 network = '192.168.1.*'
 counter = Counter.new(network)
-counter.scan
+devices = counter.scan
 
-counter.devices.each do |device|
+devices.each do |device|
 	puts device
 end
+
+# To binary
+puts counter.devices.length.to_s(2)

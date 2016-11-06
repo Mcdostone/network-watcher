@@ -1,5 +1,6 @@
 require 'open3'
 require "ipaddress"
+require 'socket'
 require './device'
 
 class Counter
@@ -18,21 +19,26 @@ class Counter
 	end
 
 	def is_device(addr)
-		IPAddress.valid?(addr) && !is_router(addr)
+		IPAddress.valid?(addr)
 	end
 
 	def is_router(addr)
 		addr == `#{CMD_ROUTER}`.strip
 	end
 
+	def is_host(addr)
+		host = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address
+		host == addr
+	end
+
+
 	def scan
 		@devices = Array.new
 		puts "scanning #{@network}"
 		Open3.popen3(nmap_command) do |stdin, stdout, stderr, wait_thr|
 			while line = stdout.gets
-				#puts "#{line}"
 				addr = get_addr(line)
-				if is_device addr
+				if is_device(addr) && !is_host(addr) && !is_router(addr)
 					@devices.push(Device.new(addr, get_name(line)))
 				elsif is_router(line)
 					@router = Device.new(addr, get_name(line))
