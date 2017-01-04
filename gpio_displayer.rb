@@ -1,7 +1,7 @@
 require 'pi_piper'
 include PiPiper
 
-class GpioCounter
+class GpioDisplayer
 
 	# little indians are little pins
 	def initialize(max = 32)

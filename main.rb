@@ -1,10 +1,10 @@
 require './counter'
-require './gpio_counter'
+require './gpio_displayer'
 require 'pi_piper'
 include PiPiper
 
 network = '192.168.1.*'
-displayer = GpioCounter.new
+displayer = GpioDisplayer.new
 counter = Counter.new(network)
 devices = counter.scan
 
