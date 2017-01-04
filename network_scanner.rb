@@ -15,7 +15,7 @@ class NetworkScanner
 	def initialize(network)
 		@network = network
 		@router = nil
-		@addr_router = `#{CMD_ROUTER}`.strip 
+		@addr_router = `#{CMD_ROUTER}`.split("\n")[0].strip
 		@devices = Array.new
 	end
 
