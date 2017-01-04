@@ -20,8 +20,8 @@ class GpioCounter
 					if @used_pins[index_pin].nil?
 						@used_pins[index_pin] = Pin.new(:pin => @available_pins[index_pin], :direction => :out) 
 					end
-					pin.off
-					pin.on if digit == "1"
+					@used_pins[index_pin].off
+					@used_pins[index_pin].on if digit == "1"
 					index_pin+= 1
 				end
 			end
