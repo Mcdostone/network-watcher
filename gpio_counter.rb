@@ -7,6 +7,7 @@ class GpioCounter
 	def initialize(max = 32)
 		@max||= max
 		@available_pins= [4, 5, 6, 12, 13, 16, 17, 18, 22, 23, 24, 25, 27]
+		@used_pins = []
 	end
 
 	def show(value)
@@ -16,8 +17,11 @@ class GpioCounter
 			index_pin = 0
 			if binary_value.length < Math.log(@max)/Math.log(2)
 				binary_value.each_char do |digit|
-					pin = PiPiper::Pin.new(:pin => @available_pins[index_pin], :direction => :out)
-					pin.on
+					if @used_pins[index_pin].nil?
+						@used_pins[index_pin] = Pin.new(:pin => @available_pins[index_pin], :direction => :out) 
+					end
+					pin.off
+					pin.on if digit == "1"
 					index_pin+= 1
 				end
 			end
