@@ -12,8 +12,7 @@ class GpioCounter
 
 	def show(value)
 		begin
-			binary_value = value.to_s(2)
-			puts "#{binary_value}\n"
+			binary_value = value.to_s(2).reverse
 			index_pin = 0
 			if binary_value.length < Math.log(@max)/Math.log(2)
 				binary_value.each_char do |digit|
