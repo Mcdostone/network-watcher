@@ -22,6 +22,9 @@ class GpioCounter
 				end
 			end
 
+			puts "Lights !"
+			sleep 10
+
 			rescue Exception => erro
 				puts "#{erro}\n"
 		end
