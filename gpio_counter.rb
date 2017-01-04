@@ -14,12 +14,12 @@ class GpioCounter
 		begin
 			binary_value = value.to_s(2).reverse
 			index_pin = 0
+			@used_pins.each { |pin|  pin.off }
 			if binary_value.length < Math.log(@max)/Math.log(2)
 				binary_value.each_char do |digit|
 					if @used_pins[index_pin].nil?
 						@used_pins[index_pin] = Pin.new(:pin => @available_pins[index_pin], :direction => :out) 
 					end
-					@used_pins[index_pin].off
 					@used_pins[index_pin].on if digit == "1"
 					index_pin+= 1
 				end
