@@ -3,7 +3,7 @@ require "ipaddress"
 require 'socket'
 require './device'
 
-class Counter
+class NetworkScanner
 
 	CMD_NMAP = "sudo nmap -sP -PR"
 	CMD_ROUTER = "route -n | awk '$2 ~/[1-9]+/ {print $2;}'"
@@ -15,22 +15,9 @@ class Counter
 	def initialize(network)
 		@network = network
 		@router = nil
+		@addr_router = `#{CMD_ROUTER}`.strip 
 		@devices = Array.new
 	end
-
-	def is_device(addr)
-		IPAddress.valid?(addr)
-	end
-
-	def is_router(addr)
-		addr == `#{CMD_ROUTER}`.strip
-	end
-
-	def is_host(addr)
-		host = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address
-		host == addr
-	end
-
 
 	def scan
 		@devices = Array.new
@@ -53,6 +40,10 @@ class Counter
 		@devices.length
 	end
 
+	def devices
+		@devices
+	end
+
 	private
 	def nmap_command()
 		"#{CMD_NMAP} #{@network}"
@@ -72,5 +63,18 @@ class Counter
 		else
 			nil
 		end
+	end
+
+	def is_device(addr)
+		IPAddress.valid?(addr)
+	end
+
+	def is_router(addr)
+		addr == @addr_router
+	end
+
+	def is_host(addr)
+		host = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address
+		host == addr
 	end
 end
