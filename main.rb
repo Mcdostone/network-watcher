@@ -26,6 +26,8 @@ def execute_main(network, delay)
 	rescue Interrupt => i
 		scheduler.join
 	end
+
+	scheduler.join	
 end
 
 # ------------------
@@ -49,6 +51,4 @@ OptionParser.new do |parser|
 
 end.parse!
 
-if(options[:network])
-	execute_main(options[:network], options[:delay])
-end
+execute_main(options[:network], options[:delay])
