@@ -6,7 +6,7 @@ require 'rufus-scheduler'
 
 scheduler = Rufus::Scheduler.new
 network = '192.168.1.*' 
-scanner = NetworkScanner.new(network)
+scanner = ProxyNetworkScanner.new(network)
 displayer = GpioDisplayer.new(16)
 
 scheduler.in '2s' do
@@ -15,8 +15,9 @@ scheduler.in '2s' do
 
 	devices.each do |device|
 		puts device
-		displayer.show(devices.empty? ? scanner.nb_devices : devices.length)
 	end
+	
+	displayer.show(devices.empty? ? scanner.nb_devices : devices.length)
 	puts "\n\n"
 end
 
