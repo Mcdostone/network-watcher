@@ -9,7 +9,7 @@ network = '192.168.1.*'
 scanner = ProxyNetworkScanner.new(network)
 displayer = GpioDisplayer.new(16)
 
-scheduler.in '20' do
+scheduler.every '20' do
 	puts "Scanning #{network} ...\n"
 	devices = scanner.scan
 
