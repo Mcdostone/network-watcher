@@ -8,6 +8,6 @@ class Device
 	end
 
 	def to_s
-		"#{@name} => #{@addr}"
+		"%10s => %s" % [@name, @addr]
 	end
 end
