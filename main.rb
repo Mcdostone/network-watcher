@@ -8,21 +8,24 @@ require 'optparse'
 def execute_main(network, delay)
 	scanner = ProxyNetworkScanner.new(network)
 	displayer = GpioDisplayer.new(16)
-	scheduler = Rufus::Scheduler.new
+	scheduler = Rufus::Scheduler.new(:max_work_threads => 1)
 	
-	scheduler.every delay do
-		puts "-- Scanning #{network} ..."
-		devices = scanner.scan
+	begin
+		scheduler.every delay do
+			puts "-- Scanning #{network} ..."
+			devices = scanner.scan
 
-		puts "-- Devices found:"
-		devices.each do |device|
-			puts "\t#{device}"
+			puts "-- Devices found:"
+			devices.each do |device|
+				puts "\t#{device}"
+			end
+			
+			displayer.show(devices.empty? ? scanner.nb_devices : devices.length)
+			puts "\n"
 		end
-		
-		displayer.show(devices.empty? ? scanner.nb_devices : devices.length)
-		puts "\n"
+	rescue Interrupt => i
+		scheduler.join
 	end
-	scheduler.join
 end
 
 # ------------------
