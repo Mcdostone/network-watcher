@@ -5,9 +5,6 @@ require 'pi_piper'
 require 'rufus-scheduler'
 require 'optparse'
 
-scheduler = Rufus::Scheduler.new
-scanner = ProxyNetworkScanner.new(network)
-displayer = GpioDisplayer.new(16)
 options = {}
 
 OptionParser.new do |parser|
@@ -35,6 +32,10 @@ end
 
 
 def execute(network, delay)
+	scanner = ProxyNetworkScanner.new(network)
+	displayer = GpioDisplayer.new(16)
+	scheduler = Rufus::Scheduler.new
+	
 	scheduler.every delay do
 		puts "-- Scanning #{network} ..."
 		devices = scanner.scan
