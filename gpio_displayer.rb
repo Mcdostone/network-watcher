@@ -25,10 +25,6 @@ class GpioDisplayer
 					index_pin+= 1
 				end
 			end
-
-			puts "Lights !"
-			sleep 5
-
 			rescue Exception => erro
 				puts "#{erro}\n"
 		end

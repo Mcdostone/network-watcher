@@ -23,7 +23,6 @@ class NetworkScanner
 
 	def scan
 		@devices = Array.new
-		puts "scanning #{@network}"
 		Open3.popen3(nmap_command) do |stdin, stdout, stderr, wait_thr|
 			while line = stdout.gets
 				addr = get_addr(line)
