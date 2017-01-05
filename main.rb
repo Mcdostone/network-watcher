@@ -5,8 +5,29 @@ require 'pi_piper'
 require 'rufus-scheduler'
 require 'optparse'
 
-options = {}
+def execute(network, delay)
+	scanner = ProxyNetworkScanner.new(network)
+	displayer = GpioDisplayer.new(16)
+	scheduler = Rufus::Scheduler.new
+	
+	scheduler.every delay do
+		puts "-- Scanning #{network} ..."
+		devices = scanner.scan
 
+		puts "-- Devices found:"
+		devices.each do |device|
+			puts "\t#{device}"
+		end
+		
+		displayer.show(devices.empty? ? scanner.nb_devices : devices.length)
+		puts "\n"
+	end
+	scheduler.join
+end
+
+# ------------------
+
+options = {}
 OptionParser.new do |parser|
 	parser.banner = "USAGE: network_watcher --network 192.168.1.* [options]"
 
@@ -25,27 +46,6 @@ OptionParser.new do |parser|
 
 end.parse!
 
-
 if(options[:network])
-	execute(options[:network], options[:delay])
-end
-
-
-def execute(network, delay)
-	scanner = ProxyNetworkScanner.new(network)
-	displayer = GpioDisplayer.new(16)
-	scheduler = Rufus::Scheduler.new
-	
-	scheduler.every delay do
-		puts "-- Scanning #{network} ..."
-		devices = scanner.scan
-
-		devices.each do |device|
-			puts "-- Devices found : \n#{device}"
-		end
-		
-		displayer.show(devices.empty? ? scanner.nb_devices : devices.length)
-		puts "\n"
-	end
-	scheduler.join
+	execute_(options[:network], options[:delay])
 end
