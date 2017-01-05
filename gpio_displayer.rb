@@ -14,7 +14,7 @@ class GpioDisplayer
 		begin
 			binary_value = value.to_s(2).reverse
 			index_pin = 0
-			@used_pins.each { |pin|  pin.off }
+			@used_pins.each_value { |pin|  pin.off }
 			if binary_value.length < Math.log(@max)/Math.log(2)
 				binary_value.each_char do |digit|
 					num_pin = @available_pins[index_pin]
