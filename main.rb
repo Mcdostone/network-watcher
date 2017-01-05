@@ -5,7 +5,7 @@ require 'pi_piper'
 require 'rufus-scheduler'
 require 'optparse'
 
-def execute(network, delay)
+def execute_main(network, delay)
 	scanner = ProxyNetworkScanner.new(network)
 	displayer = GpioDisplayer.new(16)
 	scheduler = Rufus::Scheduler.new
@@ -47,5 +47,5 @@ OptionParser.new do |parser|
 end.parse!
 
 if(options[:network])
-	execute_(options[:network], options[:delay])
+	execute_main(options[:network], options[:delay])
 end
