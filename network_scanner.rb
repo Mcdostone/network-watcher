@@ -8,6 +8,7 @@ class NetworkScanner
 	CMD_NMAP = "sudo nmap -sP -PR"
 	CMD_ROUTER = "route -n | awk '$2 ~/[1-9]+/ {print $2;}'"
 	PREFIX_LINE_ADDR = "Nmap scan report for"
+	PREFIX_END_NMAP = "Nmap done: "
 	INDEX_NAME = 4
 
 	attr_reader :devices, :router
@@ -17,6 +18,7 @@ class NetworkScanner
 		@router = nil
 		@addr_router = `#{CMD_ROUTER}`.split("\n")[0].strip
 		@devices = Array.new
+		@nb_devices_detected = 0
 	end
 
 	def scan
@@ -29,6 +31,8 @@ class NetworkScanner
 					@devices.push(Device.new(addr, get_name(line)))
 				elsif is_router(line)
 					@router = Device.new(addr, get_name(line))
+				elsif is_end_nmap(line)
+					@nb_devices_detected = get_nb_ip_found_nmap(line)
 				end
 			end
 		end
@@ -44,14 +48,21 @@ class NetworkScanner
 		@devices
 	end
 
+	def nb_devices
+		@nb_devices_detected
+	end
+
 	private
 	def nmap_command()
 		"#{CMD_NMAP} #{@network}"
 	end
 
 	def get_addr(line)
+		line ||= "--"
 		if(line.start_with?(PREFIX_LINE_ADDR))
-			line.scan(/\(([^\)]+)\)/).last.first
+			res = line.scan(/\(([^\)]+)\)/)
+			#line.scan(/\(([^\)]+)\)/).last.first
+			return res.last.first unless res.empty?
 		else
 			nil
 		end
@@ -76,5 +87,15 @@ class NetworkScanner
 	def is_host(addr)
 		host = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address
 		host == addr
+	end
+
+	def is_end_nmap(line)
+		line.start_with?(PREFIX_END_NMAP)
+	end
+
+	def get_nb_ip_found_nmap(line)
+		nb = line.scan(/([0-9]+) IP/).first.last
+		#nb = line.scan(/([0-9]+) IP/)
+		Integer(nb) if nb
 	end
 end
