@@ -16,4 +16,8 @@ class ProxyNetworkScanner
 
 		@scanner.devices
 	end
+
+	def nb_devices
+		@scanner.nb_devices
+	end
 end
